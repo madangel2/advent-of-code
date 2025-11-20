@@ -2,6 +2,7 @@ import sys
 import os
 import importlib
 from pathlib import Path
+import time
 
 def main():
     if len(sys.argv) < 3:
@@ -31,7 +32,10 @@ def main():
     
     try:
         print(f"Running Advent of Code {year} Day {day}...")
+        start_time = time.time()
         importlib.import_module(module_name)
+        end_time = time.time()
+        print(f"Execution time: {end_time - start_time:.4f} seconds")
     except ImportError as e:
         print(f"Error importing module {module_name}: {e}")
     except Exception as e:
