@@ -1,11 +1,5 @@
-pip install scipy
-python -m pip install rich
-pip install schemdraw
+To set up the project, run:
 
-TODO
-
-- create env
-- use numpy
-- use complex numbers (everywhere)
-- use python naming convention (underscore in name)
-- add benchmark
+```bash
+bash setup.sh
+```
