@@ -1,5 +1,5 @@
 from utils import get_data
-from mapUtilsComplex import allMoves, diagMoves, parseMap
+from utils import allMoves, diagMoves, parseMap
 
 def masSearch(puzzle,pos):
     nbFound = 0

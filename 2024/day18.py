@@ -1,5 +1,5 @@
 from utils import get_data
-from mapUtilsComplex import initMap, simpleMoves, MapGraph
+from utils import initMap, simpleMoves, MapGraph
 
 def initGraph(map):
     mapGraph = MapGraph()

@@ -1,5 +1,5 @@
 from utils import get_data
-from mapUtilsComplex import parseMap, simpleMoves, rightMove, MapGraph
+from utils import parseMap, simpleMoves, rightMove, MapGraph
 
 class DirectionalPosition:
     def __init__(self, pos, dir):

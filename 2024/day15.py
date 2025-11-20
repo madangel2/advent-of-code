@@ -1,5 +1,5 @@
 from utils import get_data, isInBound
-from mapUtils import applyMove, getElem, setElem, findFirstItemOnMap
+from utils import applyMove, getElem, setElem, findFirstItemOnMap
 
 def moveBox(map, box, direction):
     possibleEmptySpot = applyMove(box, direction)

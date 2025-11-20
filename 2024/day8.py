@@ -1,6 +1,6 @@
 from utils import get_data
 from collections import defaultdict
-from mapUtilsComplex import parseMap
+from utils import parseMap
 
 def getAntinodes(ant1, ant2, map, isPart1):
     antinodes = []

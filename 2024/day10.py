@@ -1,5 +1,5 @@
 from utils import get_data
-from mapUtilsComplex import parseMapInt, simpleMoves
+from utils import parseMapInt, simpleMoves
 
 data = get_data(10)
     

@@ -1,5 +1,5 @@
 from utils import get_data
-from mapUtilsComplex import parse_map, MapGraph, simpleMoves, get_absolute_diff
+from utils import parse_map, MapGraph, simpleMoves, get_absolute_diff
 
 def init_graph(map, cheats):
     map_graph = MapGraph()
