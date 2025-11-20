@@ -1,5 +1,6 @@
-from utils import get_data
-from utils import parseMap, simpleMoves, rightMove, MapGraph
+import sys
+import os
+from utils import get_data, parse_map, simpleMoves, rightMove, MapGraph
 
 class DirectionalPosition:
     def __init__(self, pos, dir):
@@ -59,10 +60,10 @@ def calcScore(source, destination):
 
 # Init challenge
 data = get_data(16)
-map = parseMap(data)
+map = parse_map(data)
 startPos = None
 endPos = None
-for pos, item in map.items():
+for pos, item in map.map.items():
     if item == 'S':
         startPos = pos
     elif item == 'E':
@@ -70,7 +71,7 @@ for pos, item in map.items():
 if startPos == None or endPos == None:
     raise Exception("Could not find start or end position")
 
-g = initGraph(map)
+g = initGraph(map.map)
 scores, seats = g.getLowestScoresWithSeats(DirectionalPosition(startPos, rightMove))
 
 allEndScores ={DirectionalPosition(endPos, move): scores[DirectionalPosition(endPos, move)] for move in simpleMoves}

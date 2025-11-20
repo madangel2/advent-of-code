@@ -1,17 +1,18 @@
-from utils import get_data
-from utils import allMoves, diagMoves, parseMap
+from utils import get_data, allMoves, diagMoves, parse_map
 
 def masSearch(puzzle,pos):
     nbFound = 0
 
-    if puzzle[pos] != 'A':
+    if puzzle.get_item(pos) != 'A':
         return False
 
     for move in diagMoves:
         newPos1 = pos + move
         newPos2 = pos - move
-        
-        if puzzle.get(newPos1) == 'M' and puzzle.get(newPos2) == 'S':
+
+        if newPos1 not in puzzle.get_all_positions() or newPos2 not in puzzle.get_all_positions():
+            continue
+        if puzzle.get_item(newPos1) == 'M' and puzzle.get_item(newPos2) == 'S':
             nbFound+=1
 
     return nbFound > 1
@@ -24,7 +25,7 @@ def wordSearch(puzzle,word,pos):
         exit = False
         for i in range(len(word)):
             newPos = pos + move * i
-            if newPos not in puzzle or puzzle[newPos] != word[i]:
+            if newPos not in puzzle.get_all_positions() or puzzle.get_item(newPos) != word[i]:
                 exit = True
                 break
         
@@ -36,8 +37,8 @@ def wordSearch(puzzle,word,pos):
 
 
 data =  get_data(4)
-puzzle = parseMap(data)  
+puzzle = parse_map(data)  
 
-print(f"Part 1: {sum([wordSearch(puzzle, 'XMAS', pos) for pos in puzzle])}")
-print(f"Part 2: {sum([1 for pos in puzzle if masSearch(puzzle,pos)])}")
+print(f"Part 1: {sum([wordSearch(puzzle, 'XMAS', pos) for pos in puzzle.get_all_positions()])}")
+print(f"Part 2: {sum([1 for pos in puzzle.get_all_positions() if masSearch(puzzle,pos)])}")
 

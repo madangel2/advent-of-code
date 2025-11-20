@@ -3,6 +3,7 @@ import os
 import importlib
 from pathlib import Path
 import time
+import traceback
 
 def main():
     if len(sys.argv) < 3:
@@ -38,8 +39,10 @@ def main():
         print(f"Execution time: {end_time - start_time:.4f} seconds")
     except ImportError as e:
         print(f"Error importing module {module_name}: {e}")
+        traceback.print_exc()
     except Exception as e:
         print(f"Error running day {day}: {e}")
+        traceback.print_exc()
 
 if __name__ == "__main__":
     main()

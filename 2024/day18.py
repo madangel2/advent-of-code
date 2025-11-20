@@ -1,5 +1,4 @@
-from utils import get_data
-from utils import initMap, simpleMoves, MapGraph
+from utils import get_data, initMap, simpleMoves, MapGraph
 
 def initGraph(map):
     mapGraph = MapGraph()
@@ -31,7 +30,7 @@ for i in range(len(corruptedMemory)):
     
     if(i >= 1023):
         g = initGraph(map)
-        lowestScore = g.getLowestScores(startPos)
+        lowestScore, path = g.getLowestScores(startPos)
 
         #TODO cleanup and speedup
         if(i == 1023):

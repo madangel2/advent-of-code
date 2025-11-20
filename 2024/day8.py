@@ -1,12 +1,11 @@
-from utils import get_data
+from utils import get_data, parse_map
 from collections import defaultdict
-from utils import parseMap
 
 def getAntinodes(ant1, ant2, map, isPart1):
     antinodes = []
     diff = ant1 - ant2
     antinode = complex(ant1 - diff * 2)
-    while(antinode in map):
+    while(map.is_in_map(antinode)):
         antinodes.append(antinode)
         if isPart1:
             break
@@ -15,9 +14,9 @@ def getAntinodes(ant1, ant2, map, isPart1):
     
         
 data = get_data(8)
-map = parseMap(data)
+map = parse_map(data)
 antennas = defaultdict(list)
-for pos, item in map.items():
+for pos, item in map.map.items():
     if item != ".":
         antennas[item].append(pos)
 
