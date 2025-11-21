@@ -7,23 +7,24 @@ def parse(key_or_lock):
     info = [col.count("#") - 1 for col in zip(*lines)]
     return isKey, info
 
-data = get_data(25)
+def solve():
+    data = get_data(25)
 
-keys = []
-locks = []
+    keys = []
+    locks = []
 
-rawData = data.split(os.linesep + os.linesep)
-for key_or_lock in rawData:
-    isKey, info = parse(key_or_lock)
-    if isKey:
-        keys.append(info)
-    else:
-        locks.append(info)
+    rawData = data.split(os.linesep + os.linesep)
+    for key_or_lock in rawData:
+        isKey, info = parse(key_or_lock)
+        if isKey:
+            keys.append(info)
+        else:
+            locks.append(info)
 
-nb_of_fit = sum(
-    all(key[i] + lock[i] <= 5 for i in range(len(lock)))
-    for key in keys
-    for lock in locks
-)
+    nb_of_fit = sum(
+        all(key[i] + lock[i] <= 5 for i in range(len(lock)))
+        for key in keys
+        for lock in locks
+    )
 
-print(f"Part 1: {nb_of_fit}")
+    return nb_of_fit, "Merry Christmas!"

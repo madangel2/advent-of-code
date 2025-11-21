@@ -59,27 +59,29 @@ def calcScore(source, destination):
     return score
 
 # Init challenge
-data = get_data(16)
-map = parse_map(data)
-startPos = None
-endPos = None
-for pos, item in map.map.items():
-    if item == 'S':
-        startPos = pos
-    elif item == 'E':
-        endPos = pos
-if startPos == None or endPos == None:
-    raise Exception("Could not find start or end position")
+def solve():
+    data = get_data(16)
+    map = parse_map(data)
+    startPos = None
+    endPos = None
+    for pos, item in map.map.items():
+        if item == 'S':
+            startPos = pos
+        elif item == 'E':
+            endPos = pos
+    if startPos == None or endPos == None:
+        raise Exception("Could not find start or end position")
 
-g = initGraph(map.map)
-scores, seats = g.getLowestScoresWithSeats(DirectionalPosition(startPos, rightMove))
+    g = initGraph(map.map)
+    scores, seats = g.getLowestScoresWithSeats(DirectionalPosition(startPos, rightMove))
 
-allEndScores ={DirectionalPosition(endPos, move): scores[DirectionalPosition(endPos, move)] for move in simpleMoves}
-minScore = float('inf')
-for endPos, score in allEndScores.items():
-    if score < minScore:
-        minScore = score
-        minEndPos = endPos
+    allEndScores ={DirectionalPosition(endPos, move): scores[DirectionalPosition(endPos, move)] for move in simpleMoves}
+    minScore = float('inf')
+    for endPos, score in allEndScores.items():
+        if score < minScore:
+            minScore = score
+            minEndPos = endPos
 
-print(f'Part1: {minScore}')
-print(f'Part2: {len(seats[endPos])}')
+    part1 = minScore
+    part2 = len(seats[endPos])
+    return part1, part2

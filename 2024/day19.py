@@ -38,12 +38,14 @@ def find_combinations(towels, patterns):
     return results
 
 # Init challenge
-data = get_data(19)
-lines = data.splitlines()
-towels = lines[0].split(", ")
-patterns = lines[2:]
+def solve():
+    data = get_data(19)
+    lines = data.splitlines()
+    towels = lines[0].split(", ")
+    patterns = lines[2:]
 
-pattern_combinations = find_combinations(towels, patterns)
+    pattern_combinations = find_combinations(towels, patterns)
 
-print(f'Part1: {len([1 for r in pattern_combinations if r > 0])}')
-print(f'Part2: {sum(pattern_combinations)}')
+    part1 = len([1 for r in pattern_combinations if r > 0])
+    part2 = sum(pattern_combinations)
+    return part1, part2

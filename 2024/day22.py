@@ -7,29 +7,31 @@ def calcNextSecret(secret):
     p3 = (p2 ^ (p2 << 11)) & 0xFFFFFF
     return p3
 
-data = get_data(22)
-buyerSecrets = [int(line) for line in data.splitlines()]
-total = 0
-occurences = defaultdict(dict)
+def solve():
+    data = get_data(22)
+    buyerSecrets = [int(line) for line in data.splitlines()]
+    total = 0
+    occurences = defaultdict(dict)
 
-for secret in buyerSecrets:
-    lastVariations = deque(maxlen=4)
-    originalSecret = secret
-    lastSecret = secret
-    for i in range(2000):
-        secret = calcNextSecret(secret)
-        lastPrice = lastSecret % 10
-        currentPrice = secret % 10
-        priceDiff = currentPrice - lastPrice
-        lastVariations.append(priceDiff)
-        if len(lastVariations) == 4:
-            key = tuple(lastVariations)
-            if originalSecret not in occurences[key]:
-                occurences[key][originalSecret] = currentPrice          
+    for secret in buyerSecrets:
+        lastVariations = deque(maxlen=4)
+        originalSecret = secret
         lastSecret = secret
-    total += secret
+        for i in range(2000):
+            secret = calcNextSecret(secret)
+            lastPrice = lastSecret % 10
+            currentPrice = secret % 10
+            priceDiff = currentPrice - lastPrice
+            lastVariations.append(priceDiff)
+            if len(lastVariations) == 4:
+                key = tuple(lastVariations)
+                if originalSecret not in occurences[key]:
+                    occurences[key][originalSecret] = currentPrice          
+            lastSecret = secret
+        total += secret
 
-sequence = max(occurences, key=lambda k: sum(occurences[k].values()))
-
-print(f"Part 1: {total}")
-print(f"Part 2: {sequence} -> {sum(occurences[sequence].values())}")
+    sequence = max(occurences, key=lambda k: sum(occurences[k].values()))
+    
+    part1 = total
+    part2 = f"{sequence} -> {sum(occurences[sequence].values())}"
+    return part1, part2

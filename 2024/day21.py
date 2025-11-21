@@ -61,26 +61,25 @@ def getNumberOfInputNeeded(inputs, directionKeyPadCache, robot_counts):
 
 
 
-data = get_data(21)
-numericKeyPad = """789
+def solve():
+    data = get_data(21)
+    numericKeyPad = """789
 456
 123
 #0A"""
 
-directionKeyPad = """#^A
+    directionKeyPad = """#^A
 <v>"""
 
-numericalKeyPadCache = parseKeyPad(numericKeyPad)
-directionKeyPadCache = parseKeyPad(directionKeyPad)
+    numericalKeyPadCache = parseKeyPad(numericKeyPad)
+    directionKeyPadCache = parseKeyPad(directionKeyPad)
 
-total2 = 0
-total25 = 0
-for code in data.splitlines():
-    firstTranslation = translateInputs(numericalKeyPadCache, code)
-    codeNumericValue = int(re.search(r'\d+', code).group())
-    total2 += getNumberOfInputNeeded(firstTranslation, directionKeyPadCache, 2) * codeNumericValue
-    total25 += getNumberOfInputNeeded(firstTranslation, directionKeyPadCache, 25) * codeNumericValue
+    total2 = 0
+    total25 = 0
+    for code in data.splitlines():
+        firstTranslation = translateInputs(numericalKeyPadCache, code)
+        codeNumericValue = int(re.search(r'\d+', code).group())
+        total2 += getNumberOfInputNeeded(firstTranslation, directionKeyPadCache, 2) * codeNumericValue
+        total25 += getNumberOfInputNeeded(firstTranslation, directionKeyPadCache, 25) * codeNumericValue
 
-
-print(f"Part 1: {total2}")
-print(f"Part 2: {total25}")
+    return total2, total25

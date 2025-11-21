@@ -36,21 +36,23 @@ def find_all_max_cliques(graph):
     bron_kerbosch(set(), all_nodes, set(), cliques)
     return cliques
 
-data = get_data(23)
+def solve():
+    data = get_data(23)
 
-connections = data.splitlines()
-connections_graph = defaultdict(set)
-for conn in connections:
-    node1, node2 = conn.split('-')
-    connections_graph[node1].add(node2)
-    connections_graph[node2].add(node1)
+    connections = data.splitlines()
+    connections_graph = defaultdict(set)
+    for conn in connections:
+        node1, node2 = conn.split('-')
+        connections_graph[node1].add(node2)
+        connections_graph[node2].add(node1)
 
-cliques_3 = find_all_cliques_3(connections_graph)
-cliques_3_t = [c for c in cliques_3 if any(e.startswith("t") for e in c)]
+    cliques_3 = find_all_cliques_3(connections_graph)
+    cliques_3_t = [c for c in cliques_3 if any(e.startswith("t") for e in c)]
 
-max_cliques = find_all_max_cliques(connections_graph)
-largest_clique = max(max_cliques, key=len)
-password =  ",".join(largest_clique)
+    max_cliques = find_all_max_cliques(connections_graph)
+    largest_clique = max(max_cliques, key=len)
+    password =  ",".join(largest_clique)
 
-print(f"Part 1: {len(cliques_3_t)}")
-print(f"Part 2: {password}")
+    part1 = len(cliques_3_t)
+    part2 = password
+    return part1, part2

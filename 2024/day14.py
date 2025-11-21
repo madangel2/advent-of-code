@@ -66,37 +66,37 @@ def calcEntropy(robots, width, height):
     
     return sum(sum(arr,[]))
 
-data = get_data(14)
-nbSeconds = 100
-width = 101
-height = 103
-treeTreshold = 30
+def solve():
+    data = get_data(14)
+    nbSeconds = 100
+    width = 101
+    height = 103
+    treeTreshold = 30
 
-pattern = re.compile(r"p=(-?[0-9]*),(-?[0-9]*) v=(-?[0-9]*),(-?[0-9]*)")
-robots = [robot(match.group(1), match.group(2), match.group(3), match.group(4)) for match in pattern.finditer(data)]
+    pattern = re.compile(r"p=(-?[0-9]*),(-?[0-9]*) v=(-?[0-9]*),(-?[0-9]*)")
+    robots = [robot(match.group(1), match.group(2), match.group(3), match.group(4)) for match in pattern.finditer(data)]
 
-#Part1
-moveRobots(robots, nbSeconds, width, height)
-print(f"Part1: {getSafetyFactor(robots, width, height)}")
+    #Part1
+    moveRobots(robots, nbSeconds, width, height)
+    part1 = getSafetyFactor(robots, width, height)
 
-#Part2
-for r in robots:
-    r.reset()
+    #Part2
+    for r in robots:
+        r.reset()
 
-#Highest is less random
-currentWorstEntropy = 0
-currentRobotMap = []
-currentSecond = 0
+    #Highest is less random
+    currentWorstEntropy = 0
+    currentRobotMap = []
+    currentSecond = 0
 
-for i in range(10000):
-    moveRobots(robots, i, width, height)
-    entropy = calcEntropy(robots, width, height)
-    if(entropy > currentWorstEntropy):
-        currentWorstEntropy = entropy
-        currentRobotMap = getRobotsMap(robots, width, height)
-        currentSecond = i
+    for i in range(10000):
+        moveRobots(robots, i, width, height)
+        entropy = calcEntropy(robots, width, height)
+        if(entropy > currentWorstEntropy):
+            currentWorstEntropy = entropy
+            currentRobotMap = getRobotsMap(robots, width, height)
+            currentSecond = i
 
-
-#Uncomment to see the tree
-#printRobots(currentRobotMap)
-print(f"Part2: {currentSecond}")
+    #Uncomment to see the tree
+    #printRobots(currentRobotMap)
+    return part1, currentSecond

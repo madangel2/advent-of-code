@@ -4,7 +4,6 @@ from multiprocessing import Pool
 from utils import get_data
 
 def getNewMap(guardMap, y, x):
-    print(f"[{y}][{x}]")
     newMap = copy.deepcopy(guardMap)
     newMap[y][x] = "#"
     return newMap
@@ -100,12 +99,12 @@ def runTheMap(guardMap, startingPosition):
         else:
             currPosition = nextPosition
             
-    #print("done")
     return len(positionLists), inLoop
 
 #### script
 
-if __name__ == "__main__":
+def solve():
+    return "FIXME", "FIXME"
     possibilities = 0
 
     invalidElems = ['#','^','v','>','<']

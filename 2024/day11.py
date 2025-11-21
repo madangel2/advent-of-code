@@ -19,13 +19,16 @@ def blinks(rockCounts):
     return newCounts
 
 
-rocks = data.split()
-rockCounts = Counter(rocks)
+def solve():
+    rocks = data.split()
+    rockCounts = Counter(rocks)
+    part1 = 0
 
-for i in range(75):
-    rockCounts = blinks(rockCounts)
-    if(i == 24):
-        print(f"Part1 -> {sum(rockCounts.values())}")
-
-print(f"Part2 -> {sum(rockCounts.values())}")
+    for i in range(75):
+        rockCounts = blinks(rockCounts)
+        if(i == 24):
+            part1 = sum(rockCounts.values())
+    
+    part2 = sum(rockCounts.values())
+    return part1, part2
 

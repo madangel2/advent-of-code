@@ -1,5 +1,4 @@
-from utils import get_data
-from utils import parse_map, MapGraph, simpleMoves, get_absolute_diff
+from utils import parse_map, MapGraph, simpleMoves, get_absolute_diff, get_data
 
 def init_graph(map, cheats):
     map_graph = MapGraph()
@@ -15,7 +14,7 @@ def init_graph(map, cheats):
                         
     return map_graph
 
-def getAllCheatScores(map, base_lowest_scores, base_score, path, max_cheat_length):
+def getAllCheatScores(map, base_lowest_scores, base_score, path, max_cheat_length, reverse_end_scores):
     cheat_scores = {}
 
     for pos in path:
@@ -29,18 +28,20 @@ def getAllCheatScores(map, base_lowest_scores, base_score, path, max_cheat_lengt
     return cheat_scores
 
 # Init challenge
-data = get_data(20)
-map = parse_map(data)
-start_pos = map.find_first_item("S")
-end_pos = map.find_first_item("E")
+def solve():
+    data = get_data(20)
+    map = parse_map(data)
+    start_pos = map.find_first_item("S")
+    end_pos = map.find_first_item("E")
 
-base_graph = init_graph(map.map, [])
-base_lowest_scores, path = base_graph.getLowestScores(start_pos)
-reverse_end_scores, reverse_path = base_graph.getLowestScores(end_pos)
-base_score = base_lowest_scores[end_pos]
+    base_graph = init_graph(map.map, [])
+    base_lowest_scores, path = base_graph.getLowestScores(start_pos)
+    reverse_end_scores, reverse_path = base_graph.getLowestScores(end_pos)
+    base_score = base_lowest_scores[end_pos]
 
-cheat_scores2 = getAllCheatScores(map, base_lowest_scores, base_score, path[end_pos], 2)
-cheat_scores20 = getAllCheatScores(map, base_lowest_scores, base_score, path[end_pos], 20)
+    cheat_scores2 = getAllCheatScores(map, base_lowest_scores, base_score, path[end_pos], 2, reverse_end_scores)
+    cheat_scores20 = getAllCheatScores(map, base_lowest_scores, base_score, path[end_pos], 20, reverse_end_scores)
 
-print(f'Part1: {sum([1 for score in cheat_scores2.values() if score >= 100])}')
-print(f'Part2: {sum([1 for score in cheat_scores20.values() if score >= 100])}')
+    part1 = sum([1 for score in cheat_scores2.values() if score >= 100])
+    part2 = sum([1 for score in cheat_scores20.values() if score >= 100])
+    return part1, part2

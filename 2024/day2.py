@@ -17,19 +17,19 @@ def omit_one(vals: list[int]) -> Iterable[list[int]]:
     for idx in range(len(vals)):
         yield vals[:idx] + vals[idx + 1 :]
 
-data =  get_data(2).splitlines()
-nbSafeReports = 0
-nbSafeReportsWithDampener = 0
+def solve():
+    data =  get_data(2).splitlines()
+    nbSafeReports = 0
+    nbSafeReportsWithDampener = 0
 
-for r in data:
-    items = [int(item) for item in r.split()]  
-    if check_report_is_safe(items):
-        nbSafeReports += 1
-    else:
-        for fixedItems in omit_one(items):
-            if check_report_is_safe(fixedItems):
-                nbSafeReportsWithDampener += 1
-                break
+    for r in data:
+        items = [int(item) for item in r.split()]  
+        if check_report_is_safe(items):
+            nbSafeReports += 1
+        else:
+            for fixedItems in omit_one(items):
+                if check_report_is_safe(fixedItems):
+                    nbSafeReportsWithDampener += 1
+                    break
 
-print(f"Part 1: {nbSafeReports}")
-print(f"Part 2: {nbSafeReportsWithDampener+nbSafeReports}")
+    return nbSafeReports, nbSafeReportsWithDampener+nbSafeReports

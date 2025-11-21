@@ -60,19 +60,19 @@ def getMiddleValue(arr):
 
     
 
-res1 = 0
-res2 = 0
-data = get_data(5)
-rules, lastIndex = getRuleDict(data)
-pageGroups = getPageGroups(data, lastIndex + 1)
+def solve():
+    res1 = 0
+    res2 = 0
+    data = get_data(5)
+    rules, lastIndex = getRuleDict(data)
+    pageGroups = getPageGroups(data, lastIndex + 1)
 
-for idx, group in enumerate(pageGroups):
-    if isValidGroup(group, rules):
-        res1 += getMiddleValue(group)
-    else:
-        fixedGroup = fixGroup(group, rules)
-        res2 += getMiddleValue(fixedGroup)
+    for idx, group in enumerate(pageGroups):
+        if isValidGroup(group, rules):
+            res1 += getMiddleValue(group)
+        else:
+            fixedGroup = fixGroup(group, rules)
+            res2 += getMiddleValue(fixedGroup)
 
-print(f"Part 1: {res1}")
-print(f"Part 2: {res2}")
+    return res1, res2
 

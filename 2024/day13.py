@@ -17,7 +17,7 @@ class ClawInfo:
         return str(self)
     
 
-def solve(problem, pTranformation):
+def solve_problem(problem, pTranformation):
     px = problem.px + pTranformation
     py = problem.py + pTranformation
     a = divmod(px*problem.by - py*problem.bx, problem.ax*problem.by - problem.ay*problem.bx)
@@ -30,16 +30,15 @@ def solve(problem, pTranformation):
     return 0
 
 
-data = get_data(13)
-pattern = re.compile(r"Button A: X\+([0-9]*), Y\+([0-9]*)\nButton B: X\+([0-9]*), Y\+([0-9]*)\nPrize: X=([0-9]*), Y=([0-9]*)")
-problems = [ClawInfo(match.group(1), match.group(2), match.group(3), match.group(4), match.group(5), match.group(6)) for match in pattern.finditer(data)]
+def solve():
+    data = get_data(13)
+    pattern = re.compile(r"Button A: X\+([0-9]*), Y\+([0-9]*)\nButton B: X\+([0-9]*), Y\+([0-9]*)\nPrize: X=([0-9]*), Y=([0-9]*)")
+    problems = [ClawInfo(match.group(1), match.group(2), match.group(3), match.group(4), match.group(5), match.group(6)) for match in pattern.finditer(data)]
 
-nbTokens = 0
-nbTokensPart2 = 0
-for p in problems:
-    nbTokens += solve(p, 0)
-    nbTokensPart2 += solve(p, 10000000000000)
+    nbTokens = 0
+    nbTokensPart2 = 0
+    for p in problems:
+        nbTokens += solve_problem(p, 0)
+        nbTokensPart2 += solve_problem(p, 10000000000000)
 
-
-print(f'Part1: {nbTokens}')
-print(f'Part1: {nbTokensPart2}')
+    return nbTokens, nbTokensPart2

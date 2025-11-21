@@ -1,7 +1,4 @@
-from utils import get_data
-from utils import parseMapInt, simpleMoves
-
-data = get_data(10)
+from utils import parseMapInt, simpleMoves, get_data
     
 def hike(map, pos):
     peaks = []
@@ -16,9 +13,13 @@ def hike(map, pos):
     
     return peaks
 
-map = parseMapInt(data)
-trailHead = [pos for pos, item in map.items() if item == 0]
-peakPerHead = {head: hike(map, head) for head in trailHead}
+def solve():
+    data = get_data(10)
+    map = parseMapInt(data)
+    trailHead = [pos for pos, item in map.items() if item == 0]
+    peakPerHead = {head: hike(map, head) for head in trailHead}
 
-print(f"Part1 -> {sum([len(set(peaks)) for peaks in peakPerHead.values()])}")
-print(f"Part2 -> {sum([len(peaks) for peaks in peakPerHead.values()])}")
+    part1 = sum([len(set(peaks)) for peaks in peakPerHead.values()])
+    part2 = sum([len(peaks) for peaks in peakPerHead.values()])
+    
+    return part1, part2

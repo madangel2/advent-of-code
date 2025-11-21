@@ -66,12 +66,15 @@ def compactMem2(nbs):
     return list(itertools.chain.from_iterable(mems))
 
 
-data = get_data(9)
-nbs = [int(item) for item in list(data)]
-mem1 = compactMem1(nbs)
-mem2 = compactMem2(nbs)
+def solve():
+    data = get_data(9)
+    nbs = [int(item) for item in list(data)]
+    mem1 = compactMem1(nbs)
+    mem2 = compactMem2(nbs)
 
-print(f"Checksum -> {sum([int(item)*idx for idx, item in enumerate(mem1) if item != "."])}")
-print(f"Checksum -> {sum([int(item)*idx for idx, item in enumerate(mem2) if item != "."])}")
+    part1 = sum([int(item)*idx for idx, item in enumerate(mem1) if item != "."])
+    part2 = sum([int(item)*idx for idx, item in enumerate(mem2) if item != "."])
+    
+    return part1, part2
 
 

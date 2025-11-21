@@ -36,9 +36,12 @@ def wordSearch(puzzle,word,pos):
 
 
 
-data =  get_data(4)
-puzzle = parse_map(data)  
+def solve():
+    data =  get_data(4)
+    puzzle = parse_map(data)  
 
-print(f"Part 1: {sum([wordSearch(puzzle, 'XMAS', pos) for pos in puzzle.get_all_positions()])}")
-print(f"Part 2: {sum([1 for pos in puzzle.get_all_positions() if masSearch(puzzle,pos)])}")
+    part1 = sum([wordSearch(puzzle, 'XMAS', pos) for pos in puzzle.get_all_positions()])
+    part2 = sum([1 for pos in puzzle.get_all_positions() if masSearch(puzzle,pos)])
+    
+    return part1, part2
 

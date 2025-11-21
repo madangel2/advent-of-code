@@ -1,5 +1,4 @@
-from utils import get_data, isInBound
-from utils import applyMove, getElem, setElem, findFirstItemOnMap
+from utils import applyMove, getElem, setElem, findFirstItemOnMap, get_data, isInBound
 
 def moveBox(map, box, direction):
     possibleEmptySpot = applyMove(box, direction)
@@ -123,21 +122,22 @@ def move2(map, direction, currentPos):
     
     return currentPos
 
-data = get_data(15).split("\n\n")
+def solve():
+    data = get_data(15).split("\n\n")
 
-#Part 1
-map = [list(line) for line in data[0].splitlines()]
-directions = list(data[1].replace("\n", ""))
-currentPos = findFirstItemOnMap(map, "@")
-for dir in directions:
-    currentPos = move(map, dir, currentPos)
-allBoxGpsCoords = sum([x + (y * 100) for y, line in enumerate(map) for x, item in enumerate(line) if item == 'O'])
-print(f'Part1: {allBoxGpsCoords}')
+    #Part 1
+    map = [list(line) for line in data[0].splitlines()]
+    directions = list(data[1].replace("\n", ""))
+    currentPos = findFirstItemOnMap(map, "@")
+    for dir in directions:
+        currentPos = move(map, dir, currentPos)
+    allBoxGpsCoords = sum([x + (y * 100) for y, line in enumerate(map) for x, item in enumerate(line) if item == 'O'])
 
-#Part 2
-map2 = [list(line) for line in data[0].replace('.','..').replace('#','##').replace('O', '[]').replace('@','@.').splitlines()]
-currentPos = findFirstItemOnMap(map2, "@")
-for dir in directions:
-    currentPos = move2(map2, dir, currentPos)
-allBoxGpsCoords2 = sum([x + (y * 100) for y, line in enumerate(map2) for x, item in enumerate(line) if item == '['])
-print(f'Part2: {allBoxGpsCoords2}')
+    #Part 2
+    map2 = [list(line) for line in data[0].replace('.','..').replace('#','##').replace('O', '[]').replace('@','@.').splitlines()]
+    currentPos = findFirstItemOnMap(map2, "@")
+    for dir in directions:
+        currentPos = move2(map2, dir, currentPos)
+    allBoxGpsCoords2 = sum([x + (y * 100) for y, line in enumerate(map2) for x, item in enumerate(line) if item == '['])
+    
+    return allBoxGpsCoords, allBoxGpsCoords2

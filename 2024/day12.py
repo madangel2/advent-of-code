@@ -48,18 +48,21 @@ def calcFencesPrice2(group):
     return totalFences * len(group)
     
 
-groups = []
-visited = []
+def solve():
+    groups = []
+    visited = []
 
-for y, line in enumerate(fullMap):
-    for x, item in enumerate(line):
-        pos = (y, x)
-        if pos in visited:
-            continue
-        
-        group = findSameNeighbors(pos, [])
-        groups.append(group)
-        visited.extend(group)
+    for y, line in enumerate(fullMap):
+        for x, item in enumerate(line):
+            pos = (y, x)
+            if pos in visited:
+                continue
+            
+            group = findSameNeighbors(pos, [])
+            groups.append(group)
+            visited.extend(group)
 
-print(f"Part1 -> {sum([calcFencesPrice(g) for g in groups])}")
-print(f"Part2 -> {sum([calcFencesPrice2(g) for g in groups])}")
+    part1 = sum([calcFencesPrice(g) for g in groups])
+    part2 = sum([calcFencesPrice2(g) for g in groups])
+    
+    return part1, part2

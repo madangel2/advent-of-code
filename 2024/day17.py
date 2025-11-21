@@ -95,19 +95,20 @@ def findRegAPart2(originalComputer):
 
 
 # Init challenge
-data = get_data(17)
+def solve():
+    data = get_data(17)
 
+    match = re.search(r"Register A: ([0-9]*)\nRegister B: ([0-9]*)\nRegister C: ([0-9]*)\n\nProgram: ([0-9,]*)", data)
+    regA = int(match[1])
+    regB = int(match[2])
+    regC = int(match[3])
+    program = [int(i) for i in match[4].split(',')]
 
-match = re.search(r"Register A: ([0-9]*)\nRegister B: ([0-9]*)\nRegister C: ([0-9]*)\n\nProgram: ([0-9,]*)", data)
-regA = int(match[1])
-regB = int(match[2])
-regC = int(match[3])
-program = [int(i) for i in match[4].split(',')]
+    comp = ThreeBitComputer(regA, regB, regC, program)
+    comp.run()
 
-comp = ThreeBitComputer(regA, regB, regC, program)
-comp.run()
-
-print(f'Part1: {comp.out}')
-print(f'Part2: {findRegAPart2(comp)}')
+    part1 = comp.out
+    part2 = findRegAPart2(comp)
+    return part1, part2
 
 
