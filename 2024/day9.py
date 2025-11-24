@@ -72,6 +72,7 @@ def solve():
     mem1 = compactMem1(nbs)
     mem2 = compactMem2(nbs)
 
+    #FIXME should return 6283404590840
     part1 = sum([int(item)*idx for idx, item in enumerate(mem1) if item != "."])
     part2 = sum([int(item)*idx for idx, item in enumerate(mem2) if item != "."])
     

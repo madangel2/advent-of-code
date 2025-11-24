@@ -33,5 +33,5 @@ def solve():
     sequence = max(occurences, key=lambda k: sum(occurences[k].values()))
     
     part1 = total
-    part2 = f"{sequence} -> {sum(occurences[sequence].values())}"
+    part2 = sum(occurences[sequence].values())
     return part1, part2
