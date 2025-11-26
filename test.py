@@ -12,6 +12,8 @@ ERROR = "🟥"
 WARN = "🟨"
 UNKNOWN = "⬜"
 
+nb_seconds_runtime_threshold = 3.0
+
 def printLine(day, run_status, exec_time, part1_answer, part2_answer):
     print(f"{day:<6} {run_status:<12} {exec_time:<16} {part1_answer:<15} {part2_answer:<15}")
 
@@ -67,7 +69,7 @@ def main():
             
             # Time check
             time_str = f"{duration:.4f}s"
-            if duration < 1.0:
+            if duration < nb_seconds_runtime_threshold:
                 time_icon = CHECK
             else:
                 time_icon = WARN

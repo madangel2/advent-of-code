@@ -1,129 +1,93 @@
-import copy
-from datetime import datetime
-from multiprocessing import Pool
-from utils import get_data
+from utils import get_data, parse_map, simpleMoves
 
-def getNewMap(guardMap, y, x):
-    newMap = copy.deepcopy(guardMap)
-    newMap[y][x] = "#"
-    return newMap
+def walk(map, current_position, current_direction_idx, obstacle_position=None):
+    next_direction_idx = current_direction_idx
+    new_position = current_position + simpleMoves[next_direction_idx]
 
-def isInBound(guardMap, position):
-    y = position[0]
-    x = position[1]
+    while map.is_in_map(new_position) and (map.get_item(new_position) == "#" or (obstacle_position and new_position == obstacle_position)):
+            next_direction_idx = (next_direction_idx + 1) % 4
+            new_position = current_position + simpleMoves[next_direction_idx]
 
-    if x < 0 or y < 0:
-        return False
+    return new_position, next_direction_idx
 
-    if x >= len(guardMap[0]) or y >= len(guardMap):
-        return False
+def solve_part1(map, starting_position):
+    current_position = starting_position
+    current_direction_idx = 0
 
-    return True
-
-def isObstacle(guardMap, position):
-    y = position[0]
-    x = position[1]
-    elem = guardMap[y][x]
-    return elem == "#"
-
-def getDirection(elem):
-    match elem:
-        case '^':
-            return "up"
-        case '>':
-            return "right"
-        case '<':
-            return "left"
-        case 'v':
-            return "down"
-        case _:
-            raise Exception("Invalid elem for direction" + elem)
-
-def switchDirection(currDirection):
-    match currDirection:
-        case "up":
-            return "right"
-        case "right":
-            return "down"
-        case "down":
-            return "left"
-        case "left":
-            return "up"
-        case _:
-            raise Exception("Invalid current direction: " + currDirection)
-
-def parsingMap(input):
-    guardMap = [list(line) for line in input.splitlines()]
-
-    for y, line in enumerate(guardMap):
-        for x, elem in enumerate(line):
-            if elem == "^":
-                return guardMap, [y,x]
-
-def runTheMapWrapper(args):
-    return runTheMap(*args)
-
-def runTheMap(guardMap, startingPosition):
-    now = datetime.now()
-    #print(f"task start {now}")
+    visited_positions = set()
+    path_with_directions = []
     
-    movement = {
-        "up" : [-1,0],
-        "right": [0,1],
-        "down": [1,0],
-        "left": [0,-1]
-    }
+    while map.is_in_map(current_position):
+        visited_positions.add(current_position)
+        path_with_directions.append((current_position, current_direction_idx))
+        current_position, current_direction_idx = walk(map, current_position, current_direction_idx)
+
+    return visited_positions, path_with_directions  
+
+def is_looping(map, start_state, new_obstacle, pre_visited):
+    visited_positions_with_direction = set()
+    current_position, current_direction_idx = start_state
     
-    positionLists = []
-    positionAndDirectionList = []
-    currPosition = copy.deepcopy(startingPosition)
-    currDirection = getDirection(guardMap[currPosition[0]][currPosition[1]])
-    inLoop = False
-
-    while isInBound(guardMap, currPosition) and not inLoop:    
-        currPositionDirection = (currPosition,currDirection)
-        if currPosition not in positionLists:
-            positionLists.append(currPosition)
-
-        if currPositionDirection in positionAndDirectionList:
-            inLoop = True
-            break
-        else:
-            positionAndDirectionList.append(currPositionDirection)
+    while map.is_in_map(current_position):
+        current_position_and_direction = (current_position, current_direction_idx)
+        
+        if current_position_and_direction in visited_positions_with_direction:
+            return True
             
+        if current_position_and_direction in pre_visited:
+            return True
+        
+        visited_positions_with_direction.add(current_position_and_direction)
+        current_position, current_direction_idx = walk(map, current_position, current_direction_idx, new_obstacle)
+    
+    return False
 
-        move = movement[currDirection]
-        nextPosition = [currPosition[0] + move[0], currPosition[1] + move[1]]
-        if isInBound(guardMap, nextPosition) and isObstacle(guardMap, nextPosition):
-            currDirection = switchDirection(currDirection)
-        else:
-            currPosition = nextPosition
+def solve_part2(map, path_with_directions):
+    valid_positions = set()
+    visited_path_set = set()
+    tested_obstacles = set()
+    
+    start_pos = path_with_directions[0][0]
+    
+    for i in range(len(path_with_directions) - 1):
+        current_state = path_with_directions[i]
+        current_pos = current_state[0]
+        
+        next_state = path_with_directions[i+1]
+        candidate_pos = next_state[0]
+        
+        if candidate_pos == current_pos:
+            visited_path_set.add(current_state)
+            continue
             
-    return len(positionLists), inLoop
-
-#### script
+        if candidate_pos == start_pos:
+            visited_path_set.add(current_state)
+            continue
+            
+        if candidate_pos in tested_obstacles:
+            visited_path_set.add(current_state)
+            continue
+            
+        tested_obstacles.add(candidate_pos)
+        
+        if is_looping(map, current_state, candidate_pos, visited_path_set):
+            valid_positions.add(candidate_pos)
+        
+        visited_path_set.add(current_state)
+            
+    return valid_positions
 
 def solve():
-    return "FIXME", "FIXME"
-    possibilities = 0
-
-    invalidElems = ['#','^','v','>','<']
     data = get_data(6)
-    guardMap, startingPosition = parsingMap(data)
+    map = parse_map(data)
+    startingPosition = map.find_first_item("^")
+    visitedPositions, path_with_directions = solve_part1(map, startingPosition)
+    possiblePositions = solve_part2(map, path_with_directions)
 
-    tasks = []
-    maps = []
-    for y in range(len(guardMap)):
-        for x in range(len(guardMap[y])):
-            if guardMap[y][x] not in invalidElems:
-                maps.append((getNewMap(guardMap, y, x), startingPosition))
-    
-    with Pool(processes=100) as pool:
-        results = pool.map(runTheMapWrapper, maps)
+    part1 = len(visitedPositions)
+    part2 = len(possiblePositions)
 
-    #print(results)
-    ## TODO MAKE FASTER
-    print(sum(1 for i in results if i[1] == True))
+    return part1, part2
     
 
 

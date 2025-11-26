@@ -1,5 +1,13 @@
 from utils import get_data
-import itertools
+
+class Node:
+    def __init__(self, size, is_free, file_id=None, pos=0):
+        self.size = size
+        self.is_free = is_free
+        self.file_id = file_id
+        self.pos = pos
+        self.prev = None
+        self.next = None
 
 def compactMem1(nbs):
     idx = 0
@@ -9,10 +17,10 @@ def compactMem1(nbs):
         if empty:
             mems.extend(nb*".")
         else:
-            mems.extend(nb*str(idx))
+            mems.extend([str(idx)] * nb)
             idx += 1
         empty = not empty
-    
+
     idx1 = 0
     idx2 = len(mems) - 1
     while(idx1 < idx2):
@@ -28,42 +36,83 @@ def compactMem1(nbs):
 
     return mems
 
-def getMemArray(char,number):
-    arr = []
-    for i in range(number):
-        arr.append(char)
-    return arr
 
-def compactMem2(nbs):
-    idx = 0
-    empty = False
-    mems = []
-    for i, nb in enumerate(nbs):
-        if empty:
-            mems.append(getMemArray(".", nb))
-        else:
-            mems.append(getMemArray(str(idx), nb))
-            idx += 1
-        empty = not empty
-
-    moved = []
-    for i in range(len(mems)-1, 0, -1):
-        if "." in mems[i] or len(mems[i])==0 or mems[i][0] in moved :
-            continue
-
-        for j in range(0, i):
-            if("." not in mems[j] or len(mems[j]) < len(mems[i])):
-                continue
-            tmp = getMemArray(".", len(mems[j]) - len(mems[i]))
-            mems[j] = mems[i]
-            mems[i] = getMemArray(".", len(mems[i]))
-            if(len(tmp) > 0):
-                mems.insert(j+1,tmp)
-                i += 1
-            moved.append(mems[[j][0]])
-            break
+def compactMem2(disk_map):
+    # Build linked list
+    head = tail = None
+    pos = file_id = 0
     
-    return list(itertools.chain.from_iterable(mems))
+    for i, size in enumerate(disk_map):
+        is_free = i % 2 == 1
+        if size > 0:
+            node = Node(size, is_free, None if is_free else file_id, pos)
+            if head is None:
+                head = tail = node
+            else:
+                tail.next = node
+                node.prev = tail
+                tail = node
+            pos += size
+        if not is_free:
+            file_id += 1
+    
+    # Index first free block of each size
+    first_free = [None] * 10
+    node = head
+    while node:
+        if node.is_free:
+            for s in range(1, min(node.size + 1, 10)):
+                if first_free[s] is None:
+                    first_free[s] = node
+        node = node.next
+    
+    # Move files from right to left
+    current = tail
+    while current:
+        prev = current.prev
+        if not current.is_free and current.size < 10:
+            target = first_free[current.size]
+            if target and target.pos < current.pos:
+                # Move file
+                remaining = target.size - current.size
+                target.is_free = False
+                target.file_id = current.file_id
+                target.size = current.size
+                current.is_free = True
+                current.file_id = None
+                
+                # Split free space if needed
+                new_free = None
+                if remaining > 0:
+                    new_free = Node(remaining, True, None, target.pos + current.size)
+                    new_free.prev = target
+                    new_free.next = target.next
+                    if target.next:
+                        target.next.prev = new_free
+                    target.next = new_free
+                
+                # Update free index
+                for s in range(1, 10):
+                    if first_free[s] == target:
+                        if new_free and s <= remaining:
+                            first_free[s] = new_free
+                        else:
+                            runner = target.next
+                            while runner and runner.pos < current.pos:
+                                if runner.is_free and runner.size >= s:
+                                    break
+                                runner = runner.next
+                            first_free[s] = runner if runner and runner.pos < current.pos else None
+        current = prev
+    
+    # Render result
+    result = []
+    node = head
+    while node:
+        result.extend(["."] * node.size if node.is_free else [str(node.file_id)] * node.size)
+        node = node.next
+    return result
+
 
 
 def solve():
@@ -72,7 +121,6 @@ def solve():
     mem1 = compactMem1(nbs)
     mem2 = compactMem2(nbs)
 
-    #FIXME should return 6283404590840
     part1 = sum([int(item)*idx for idx, item in enumerate(mem1) if item != "."])
     part2 = sum([int(item)*idx for idx, item in enumerate(mem2) if item != "."])
     
