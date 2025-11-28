@@ -41,7 +41,20 @@ def main():
     printLine("Day", "Run status", "Execution time", "Part 1 answer", "Part 2 answer")
     print("-" * 66)
 
-    for day in range(1, 26):
+    # Discover days
+    year_dir = project_root / year
+    days = []
+    if year_dir.exists() and year_dir.is_dir():
+        for filename in os.listdir(year_dir):
+            if filename.startswith("day") and filename.endswith(".py"):
+                try:
+                    day_num = int(filename[3:-3])
+                    days.append(day_num)
+                except ValueError:
+                    pass
+    days.sort()
+
+    for day in days:
         day_str = str(day)
         module_name = f"{year}.day{day}"
         
