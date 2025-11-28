@@ -14,18 +14,38 @@ def init_graph(map, cheats):
                         
     return map_graph
 
-def getAllCheatScores(map, base_lowest_scores, base_score, path, max_cheat_length, reverse_end_scores):
-    cheat_scores = {}
-
+def countCheatScoresBoth(map, base_lowest_scores, base_score, path, max_cheat_length, reverse_end_scores, min_score=100, part1_max_length=2):
+    part1_count = 0
+    part2_count = 0
+    
+    # Pre-compute all (offset, distance) pairs once
+    offset_distance_pairs = []
+    for dx in range(-max_cheat_length, max_cheat_length + 1):
+        abs_dx = abs(dx)
+        remaining = max_cheat_length - abs_dx
+        for dy in range(-remaining, remaining + 1):
+            offset_distance_pairs.append((complex(dx, dy), abs_dx + abs(dy)))
+    
+    # Main loop
     for pos in path:
         current_step = base_lowest_scores[pos]
-        for cheat_end_pos in map.get_all_positions_in_radius(pos, max_cheat_length, True):
-            cheat_length = get_absolute_diff(pos, cheat_end_pos)
+        
+        for offset, cheat_length in offset_distance_pairs:
+            cheat_end_pos = pos + offset
+            
+            # Skip if not reachable
+            if cheat_end_pos not in reverse_end_scores:
+                continue
+            
             dist_to_end = reverse_end_scores[cheat_end_pos]
             cheat_score = base_score - (current_step + cheat_length + dist_to_end)
-            cheat_scores[(pos,cheat_end_pos)] = cheat_score
+            
+            if cheat_score >= min_score:
+                part2_count += 1
+                if cheat_length <= part1_max_length:
+                    part1_count += 1
 
-    return cheat_scores
+    return part1_count, part2_count
 
 # Init challenge
 def solve():
@@ -39,9 +59,7 @@ def solve():
     reverse_end_scores, reverse_path = base_graph.getLowestScores(end_pos)
     base_score = base_lowest_scores[end_pos]
 
-    cheat_scores2 = getAllCheatScores(map, base_lowest_scores, base_score, path[end_pos], 2, reverse_end_scores)
-    cheat_scores20 = getAllCheatScores(map, base_lowest_scores, base_score, path[end_pos], 20, reverse_end_scores)
-
-    part1 = sum([1 for score in cheat_scores2.values() if score >= 100])
-    part2 = sum([1 for score in cheat_scores20.values() if score >= 100])
+    # Calculate both parts in a single pass
+    part1, part2 = countCheatScoresBoth(map, base_lowest_scores, base_score, path[end_pos], 20, reverse_end_scores)
+    
     return part1, part2
