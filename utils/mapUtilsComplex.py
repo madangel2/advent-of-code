@@ -26,6 +26,14 @@ class ComplexMap:
     def get_all_positions(self):
         return self.map.keys()
 
+    def get_neighbors(self, position : complex):
+        neighbors = []
+        for move in allMoves:
+            neighbor = position + move
+            if neighbor in self.map:
+                neighbors.append(neighbor)
+        return neighbors
+
     def get_absolute_diff(self, position: complex, other_position: complex):
         diff = position-other_position
         return abs(diff.real) + abs(diff.imag)
