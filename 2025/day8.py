@@ -1,7 +1,7 @@
 import math
 from utils import get_data
 
-def find_all_closest_pairs_optimized(points, max_pairs=None):
+def find_all_closest_pairs(points, max_pairs=None):
     # Pre-compute all pairwise distances once
     all_pairs_with_distances = []
     
@@ -56,12 +56,12 @@ def solve():
     points = sorted([tuple(map(int, line.split(","))) for line in data.split("\n")])
     
     # Part1
-    circuits = find_all_closest_pairs_optimized(points, max_pairs=1000)[0]
+    circuits = find_all_closest_pairs(points, max_pairs=1000)[0]
     ordered_circuits = sorted(circuits, key=lambda x: x[1], reverse=True)
     part1 = ordered_circuits[0][1] * ordered_circuits[1][1] * ordered_circuits[2][1]
     
     # Part2 (Not very efficient but still under 1 second)
-    last_pair_key = find_all_closest_pairs_optimized(points)[1]
+    last_pair_key = find_all_closest_pairs(points)[1]
     part2 = last_pair_key[0][0] * last_pair_key[1][0]
     
     return part1, part2
