@@ -1,3 +1,4 @@
 scipy
 rich
 shapely
+z3-solver
